@@ -2,7 +2,7 @@ from dishka import make_async_container
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 
-#from presentation.exception_handlers import register_exception_handlers
+from presentation.exception_handlers import register_exception_handlers
 from presentation.routers import auth, users
 from infrastructure.providers.providers import (
     DatabaseProvider,
@@ -29,7 +29,7 @@ def create_app() -> FastAPI:
     setup_dishka(container, app)
 
     # ── Exception handlers ────────────────────────────────────────────────────
-    #register_exception_handlers(app)
+    register_exception_handlers(app)
 
     # ── Routers ───────────────────────────────────────────────────────────────
     prefix = "/api/v1"
