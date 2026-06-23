@@ -6,8 +6,8 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engin
 from application.interfaces.hasher_service_port import HasherServicePort
 from application.interfaces.jwt_service_port import JWTServicePort
 from application.interfaces.event_publisher_port import EventPublisherPort
-from domain.repositories.user_repository_port import UserRepositoryPort
-from domain.repositories.refresh_token_repository_port import RefreshTokenRepositoryPort
+from domain.repositories.user_port import UserPort
+from domain.repositories.refresh_token_port import RefreshTokenPort
 from infrastructure.config.settings import settings, get_database_url
 from infrastructure.services.event_publisher_service import LogEventPublisher
 from infrastructure.services.hasher_service import HasherService
@@ -61,32 +61,32 @@ class InfrastructureProvider(Provider):
 
 class RepositoryProvider(Provider):
     @provide(scope=Scope.REQUEST)
-    def user_port(self, session: AsyncSession) -> UserRepositoryPort:
+    def user_port(self, session: AsyncSession) -> UserPort:
         return UserRepository(session)
 
     @provide(scope=Scope.REQUEST)
-    def refresh_token_port(self, session: AsyncSession) -> RefreshTokenRepositoryPort:
+    def refresh_token_port(self, session: AsyncSession) -> RefreshTokenPort:
         return RefreshTokenRepository(session)
 
 class UseCaseProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def register_user(
         self,
-        user_repo: UserRepositoryPort,
+        user_repo: UserPort,
         hasher: HasherServicePort,
         publisher: EventPublisherPort,
     ) -> RegisterUser:
         return RegisterUser(user_repo, hasher, publisher)
 
     @provide(scope=Scope.REQUEST)
-    def authenticated_user(self, user_repo: UserRepositoryPort) -> AuthenticatedUser:
+    def authenticated_user(self, user_repo: UserPort) -> AuthenticatedUser:
         return AuthenticatedUser(user_repo)
 
     @provide(scope=Scope.REQUEST)
     def login(
         self,
-        user_repo: UserRepositoryPort,
-        token_repo: RefreshTokenRepositoryPort,
+        user_repo: UserPort,
+        token_repo: RefreshTokenPort,
         hasher: HasherServicePort,
         jwt: JWTServicePort,
     ) -> Login:
@@ -95,11 +95,11 @@ class UseCaseProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def refresh_tokens(
         self,
-        token_repo: RefreshTokenRepositoryPort,
+        token_repo: RefreshTokenPort,
         jwt: JWTServicePort
     ) -> RefreshTokens:
         return RefreshTokens(token_repo, jwt)
 
     @provide(scope=Scope.REQUEST)
-    def logout(self, token_repo: RefreshTokenRepositoryPort) -> Logout:
+    def logout(self, token_repo: RefreshTokenPort) -> Logout:
         return Logout(token_repo)

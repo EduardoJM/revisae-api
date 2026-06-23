@@ -4,10 +4,10 @@ from datetime import datetime, UTC
 from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from domain.repositories.refresh_token_repository_port import RefreshTokenRepositoryPort
+from domain.repositories.refresh_token_port import RefreshTokenPort
 from infrastructure.database.models.refresh_token import RefreshTokenModel
 
-class RefreshTokenRepository(RefreshTokenRepositoryPort):
+class RefreshTokenRepository(RefreshTokenPort):
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 

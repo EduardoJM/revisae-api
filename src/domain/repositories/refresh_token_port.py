@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
-class RefreshTokenRepositoryPort(ABC):
+class RefreshTokenPort(ABC):
     @abstractmethod
     async def save(self, user_id: UUID, token_hash: str, expires_at: object) -> None: ...
 

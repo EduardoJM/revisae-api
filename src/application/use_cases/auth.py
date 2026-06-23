@@ -1,7 +1,7 @@
 from uuid import UUID
 
-from domain.repositories.user_repository_port import UserRepositoryPort
-from domain.repositories.refresh_token_repository_port import RefreshTokenRepositoryPort
+from domain.repositories.user_port import UserPort
+from domain.repositories.refresh_token_port import RefreshTokenPort
 from domain.exceptions.auth import RefreshTokenNotFound, InvalidCredentials
 from application.interfaces.hasher_service_port import HasherServicePort
 from application.interfaces.jwt_service_port import JWTServicePort
@@ -10,8 +10,8 @@ from application.schemas.auth import RefreshInput, LoginInput, TokenOutput
 class Login:
     def __init__(
         self,
-        user_repo: UserRepositoryPort,
-        token_repo: RefreshTokenRepositoryPort,
+        user_repo: UserPort,
+        token_repo: RefreshTokenPort,
         hasher: HasherServicePort,
         jwt: JWTServicePort,
     ) -> None:
@@ -36,7 +36,7 @@ class Login:
 class RefreshTokens:
     def __init__(
         self,
-        token_repo: RefreshTokenRepositoryPort,
+        token_repo: RefreshTokenPort,
         jwt: JWTServicePort,
     ) -> None:
         self._tokens = token_repo
@@ -59,7 +59,7 @@ class RefreshTokens:
         return TokenOutput(access_token=access, refresh_token=raw_refresh)
 
 class Logout:
-    def __init__(self, token_repo: RefreshTokenRepositoryPort) -> None:
+    def __init__(self, token_repo: RefreshTokenPort) -> None:
         self._tokens = token_repo
 
     async def execute(self, data: RefreshInput) -> None:

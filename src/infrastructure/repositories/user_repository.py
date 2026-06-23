@@ -4,11 +4,11 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from domain.entities.user import User
-from domain.repositories.user_repository_port import UserRepositoryPort
+from domain.repositories.user_port import UserPort
 from infrastructure.database.models import UserModel
 from infrastructure.mappers.user import UserMapper
 
-class UserRepository(UserRepositoryPort):
+class UserRepository(UserPort):
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
