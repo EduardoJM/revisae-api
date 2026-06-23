@@ -9,11 +9,11 @@ from application.interfaces.event_publisher_port import EventPublisherPort
 from domain.repositories.user_port import UserPort
 from domain.repositories.refresh_token_port import RefreshTokenPort
 from infrastructure.config.settings import settings, get_database_url
-from infrastructure.services.event_publisher_service import LogEventPublisher
-from infrastructure.services.hasher_service import HasherService
-from infrastructure.services.jwt_service import JWTService
-from infrastructure.repositories.user_repository import UserRepository
-from infrastructure.repositories.refresh_token_repository import RefreshTokenRepository
+from adapters.services.event_publisher_service import LogEventPublisher
+from adapters.services.hasher_service import HasherService
+from adapters.services.jwt_service import JWTService
+from adapters.repositories.user_repository import UserRepository
+from adapters.repositories.refresh_token_repository import RefreshTokenRepository
 
 from application.use_cases.user import RegisterUser, AuthenticatedUser
 from application.use_cases.auth import Login, RefreshTokens, Logout
