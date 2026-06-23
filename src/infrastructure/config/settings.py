@@ -3,9 +3,9 @@ from dynaconf import Dynaconf
 settings = Dynaconf(
     envvar_prefix="TODOLIST",       # TODOLIST_DATABASE_URL sobrescreve settings.database_url
     settings_file=["settings.toml", ".secrets.toml"],
-    environments=False,              # habilita seções [development], [production], etc.
+    environments=True,
     env_switcher="ENV_FOR_DYNACONF",
-    load_dotenv=True,               # lê .env se existir (útil para CI/CD)
+    load_dotenv=True,
     dotenv_path=".env",
 )
 

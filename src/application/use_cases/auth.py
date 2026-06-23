@@ -3,10 +3,6 @@ from uuid import UUID
 from domain.repositories.user_repository_port import UserRepositoryPort
 from domain.repositories.refresh_token_repository_port import RefreshTokenRepositoryPort
 from domain.exceptions.auth import RefreshTokenNotFound, InvalidCredentials
-from domain.entities.user import User
-from domain.value_objects.email import Email
-from domain.value_objects.password import HashedPassword
-from application.interfaces.event_publisher_port import EventPublisherPort
 from application.interfaces.hasher_service_port import HasherServicePort
 from application.interfaces.jwt_service_port import JWTServicePort
 from application.schemas.auth import RefreshInput, LoginInput, TokenOutput
@@ -32,7 +28,7 @@ class Login:
             raise InvalidCredentials()
 
         access = self._jwt.create_access_token(user.id)
-        raw_refresh, token_hash, expires_at = self._security.create_refresh_token(user.id)
+        raw_refresh, token_hash, expires_at = self._jwt.create_refresh_token(user.id)
         await self._tokens.save(user.id, token_hash, expires_at)
 
         return TokenOutput(access_token=access, refresh_token=raw_refresh)

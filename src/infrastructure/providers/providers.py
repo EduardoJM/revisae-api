@@ -15,7 +15,7 @@ from infrastructure.services.jwt_service import JWTService
 from infrastructure.repositories.user_repository import UserRepository
 from infrastructure.repositories.refresh_token_repository import RefreshTokenRepository
 
-from application.use_cases.user import RegisterUser
+from application.use_cases.user import RegisterUser, AuthenticatedUser
 from application.use_cases.auth import Login, RefreshTokens, Logout
 
 class DatabaseProvider(Provider):
@@ -77,6 +77,10 @@ class UseCaseProvider(Provider):
         publisher: EventPublisherPort,
     ) -> RegisterUser:
         return RegisterUser(user_repo, hasher, publisher)
+
+    @provide(scope=Scope.REQUEST)
+    def authenticated_user(self, user_repo: UserRepositoryPort) -> AuthenticatedUser:
+        return AuthenticatedUser(user_repo)
 
     @provide(scope=Scope.REQUEST)
     def login(

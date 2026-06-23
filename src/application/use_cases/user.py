@@ -1,7 +1,7 @@
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from domain.repositories.user_repository_port import UserRepositoryPort
-from domain.exceptions.user import EmailAlreadyTaken
+from domain.exceptions.user import EmailAlreadyTaken, UserNotFound
 from domain.entities.user import User
 from domain.value_objects.email import Email
 from domain.value_objects.password import HashedPassword
@@ -45,4 +45,14 @@ class RegisterUser:
         for event in user.collect_events():
             await self._publisher.publish(event)
 
+        return _user_to_output(user)
+
+class AuthenticatedUser:
+    def __init__(self, user_repo: UserRepositoryPort):
+        self._users = user_repo
+
+    async def execute(self, user_id: UUID) -> UserOutput:
+        user = await self._users.find_by_id(user_id)
+        if not user:
+            raise UserNotFound()
         return _user_to_output(user)
