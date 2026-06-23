@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: always
+    volumes:
+      - revisae_db:/var/lib/postgresql/data/
+    environment:
+      - TZ=America/Sao_Paulo
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: "pg_isready -U postgres -d postgres"
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  revisae_db:
