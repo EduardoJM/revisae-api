@@ -1,22 +1,32 @@
 from collections.abc import AsyncIterator
+from typing import Annotated
 
+from fastapi import Depends
 from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine, async_sessionmaker
+
+from infrastructure.config.settings import settings, get_database_url
 
 from application.interfaces.hasher_service_port import HasherServicePort
 from application.interfaces.jwt_service_port import JWTServicePort
 from application.interfaces.event_publisher_port import EventPublisherPort
+from application.interfaces.paginator_port import PaginatorPort
+
 from domain.repositories.user_port import UserPort
 from domain.repositories.refresh_token_port import RefreshTokenPort
-from infrastructure.config.settings import settings, get_database_url
+from domain.repositories.subject_port import SubjectPort
+
 from adapters.services.event_publisher_service import LogEventPublisher
 from adapters.services.hasher_service import HasherService
 from adapters.services.jwt_service import JWTService
+from adapters.services.paginator_service import PaginatorService
 from adapters.repositories.user_repository import UserRepository
 from adapters.repositories.refresh_token_repository import RefreshTokenRepository
+from adapters.repositories.subject_repository import SubjectRepository
 
 from application.use_cases.user import RegisterUser, AuthenticatedUser
 from application.use_cases.auth import Login, RefreshTokens, Logout
+from application.use_cases.subject import CreateSubject, ListSubjects
 
 class DatabaseProvider(Provider):
     @provide(scope=Scope.APP)
@@ -57,7 +67,13 @@ class InfrastructureProvider(Provider):
     @provide(scope=Scope.APP)
     def publisher(self) -> EventPublisherPort:
         return LogEventPublisher()
-
+    
+    @provide(scope=Scope.REQUEST)
+    def paginator(
+        self,
+        session: AsyncSession,
+    ) -> PaginatorPort:
+        return PaginatorService(session)
 
 class RepositoryProvider(Provider):
     @provide(scope=Scope.REQUEST)
@@ -67,6 +83,10 @@ class RepositoryProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def refresh_token_port(self, session: AsyncSession) -> RefreshTokenPort:
         return RefreshTokenRepository(session)
+    
+    @provide(scope=Scope.REQUEST)
+    def subject_port(self, session: AsyncSession, paginator: PaginatorPort) -> SubjectPort:
+        return SubjectRepository(session, paginator)
 
 class UseCaseProvider(Provider):
     @provide(scope=Scope.REQUEST)
@@ -103,3 +123,11 @@ class UseCaseProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def logout(self, token_repo: RefreshTokenPort) -> Logout:
         return Logout(token_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def create_subject(self, subject_repo: SubjectPort) -> CreateSubject:
+        return CreateSubject(subject_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def list_subjects(self, subject_repo: SubjectPort) -> ListSubjects:
+        return ListSubjects(subject_repo)

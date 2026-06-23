@@ -2,13 +2,14 @@ from datetime import datetime
 from uuid import UUID
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ForeignKey, String, Text, DateTime, Enum as SAEnum, Uuid
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy import String, DateTime, Uuid
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .base import BaseModel
 
 if TYPE_CHECKING:
     from .refresh_token import RefreshTokenModel
+    from .subjects import SubjectModel
 
 
 class UserModel(BaseModel):
@@ -22,4 +23,7 @@ class UserModel(BaseModel):
 
     refresh_tokens: Mapped[list["RefreshTokenModel"]] = relationship(
         "RefreshTokenModel", back_populates="user", cascade="all, delete-orphan"
+    )
+    subjects: Mapped[list["SubjectModel"]] = relationship(
+        "SubjectModel", back_populates="user", cascade="all, delete-orphan"
     )
