@@ -36,3 +36,16 @@ class Subject:
     @property
     def created_at(self) -> datetime:
         return self._created_at
+
+    def update(
+        self,
+        name: str | None = None,
+        color: HexColor | None = None,
+    ) -> None:
+        if name is not None:
+            self._name = name
+        if color is not None:
+            self._color = color
+
+    def belongs_to(self, user_id: UUID) -> bool:
+        return self._user_id == user_id

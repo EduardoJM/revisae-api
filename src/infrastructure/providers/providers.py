@@ -1,9 +1,9 @@
 from collections.abc import AsyncIterator
-from typing import Annotated
 
-from fastapi import Depends
 from dishka import Provider, Scope, provide
-from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine, AsyncSession, create_async_engine, async_sessionmaker
+)
 
 from infrastructure.config.settings import settings, get_database_url
 
@@ -26,7 +26,9 @@ from adapters.repositories.subject_repository import SubjectRepository
 
 from application.use_cases.user import RegisterUser, AuthenticatedUser
 from application.use_cases.auth import Login, RefreshTokens, Logout
-from application.use_cases.subject import CreateSubject, ListSubjects
+from application.use_cases.subject import (
+    CreateSubject, ListSubjects, GetSubject, UpdateSubject, DeleteSubject
+)
 
 class DatabaseProvider(Provider):
     @provide(scope=Scope.APP)
@@ -131,3 +133,15 @@ class UseCaseProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def list_subjects(self, subject_repo: SubjectPort) -> ListSubjects:
         return ListSubjects(subject_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def get_subject(self, subject_repo: SubjectPort) -> GetSubject:
+        return GetSubject(subject_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def delete_subject(self, subject_repo: SubjectPort) -> DeleteSubject:
+        return DeleteSubject(subject_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def update_subject(self, subject_repo: SubjectPort) -> UpdateSubject:
+        return UpdateSubject(subject_repo)

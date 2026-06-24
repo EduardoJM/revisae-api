@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from application.interfaces.paginator_port import Page, PaginatorPort
@@ -42,7 +42,9 @@ class SubjectRepository(SubjectPort):
         )
     
     async def delete(self, subject_id):
-        raise Exception("A")
+        await self._session.execute(
+            delete(SubjectModel).where(SubjectModel.id == subject_id)
+        )
 
     async def save(self, subject: Subject) -> None:
         model = SubjectMapper.to_model(subject)
