@@ -1,16 +1,19 @@
 from datetime import datetime
 from uuid import UUID
+from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, AfterValidator
+
+from domain.validators.hex_color import validate_hex_color
 
 
 class CreateSubjectInput(BaseModel):
     name: str
-    color: str # TODO: add validations
+    color: Annotated[str, AfterValidator(validate_hex_color)] # TODO: add validations
 
 class UpdateSubjectInput(BaseModel):
     name: str | None = None
-    color: str | None = None # TODO: add validations
+    color: Annotated[str, AfterValidator(validate_hex_color)] | None = None # TODO: add validations
 
 class SubjectOutput(BaseModel):
     id: UUID
