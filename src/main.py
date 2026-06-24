@@ -14,8 +14,8 @@ from infrastructure.providers.providers import (
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="TodoList API",
-        description="Clean Architecture · FastAPI · Dishka · PostgreSQL",
+        title="Revisaê - API",
+        description="",
         version="1.0.0",
     )
 
