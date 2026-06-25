@@ -10,6 +10,7 @@ from .base import BaseModel
 if TYPE_CHECKING:
     from .refresh_token import RefreshTokenModel
     from .subjects import SubjectModel
+    from .revision_cycle import RevisionCycleModel
 
 
 class UserModel(BaseModel):
@@ -26,4 +27,7 @@ class UserModel(BaseModel):
     )
     subjects: Mapped[list["SubjectModel"]] = relationship(
         "SubjectModel", back_populates="user", cascade="all, delete-orphan"
+    )
+    revision_cycles: Mapped[list["SubjectModel"]] = relationship(
+        "RevisionCycleModel", back_populates="user", cascade="all, delete-orphan"
     )

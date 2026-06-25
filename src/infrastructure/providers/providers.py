@@ -15,6 +15,7 @@ from application.interfaces.paginator_port import PaginatorPort
 from domain.repositories.user_port import UserPort
 from domain.repositories.refresh_token_port import RefreshTokenPort
 from domain.repositories.subject_port import SubjectPort
+from domain.repositories.revision_cycle_port import RevisionCyclePort
 
 from adapters.services.event_publisher_service import LogEventPublisher
 from adapters.services.hasher_service import HasherService
@@ -23,11 +24,16 @@ from adapters.services.paginator_service import PaginatorService
 from adapters.repositories.user_repository import UserRepository
 from adapters.repositories.refresh_token_repository import RefreshTokenRepository
 from adapters.repositories.subject_repository import SubjectRepository
+from adapters.repositories.revision_cycle_repository import RevisionCycleRepository
 
 from application.use_cases.user import RegisterUser, AuthenticatedUser
 from application.use_cases.auth import Login, RefreshTokens, Logout
 from application.use_cases.subject import (
     CreateSubject, ListSubjects, GetSubject, UpdateSubject, DeleteSubject
+)
+from application.use_cases.revision_cycle import (
+    CreateRevisionCycle, ListRevisionCycles, GetRevisionCycle,
+    UpdateRevisionCycle, DeleteRevisionCycle
 )
 
 class DatabaseProvider(Provider):
@@ -89,6 +95,10 @@ class RepositoryProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def subject_port(self, session: AsyncSession, paginator: PaginatorPort) -> SubjectPort:
         return SubjectRepository(session, paginator)
+    
+    @provide(scope=Scope.REQUEST)
+    def revision_cycle_port(self, session: AsyncSession, paginator: PaginatorPort) -> RevisionCyclePort:
+        return RevisionCycleRepository(session, paginator)
 
 class UseCaseProvider(Provider):
     @provide(scope=Scope.REQUEST)
@@ -145,3 +155,23 @@ class UseCaseProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def update_subject(self, subject_repo: SubjectPort) -> UpdateSubject:
         return UpdateSubject(subject_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def create_revision_cycle(self, revision_cycle_repo: RevisionCyclePort) -> CreateRevisionCycle:
+        return CreateRevisionCycle(revision_cycle_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def list_revision_cycles(self, revision_cycle_repo: RevisionCyclePort) -> ListRevisionCycles:
+        return ListRevisionCycles(revision_cycle_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def get_revision_cycle(self, revision_cycle_repo: RevisionCyclePort) -> GetRevisionCycle:
+        return GetRevisionCycle(revision_cycle_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def delete_revision_cycle(self, revision_cycle_repo: RevisionCyclePort) -> DeleteRevisionCycle:
+        return DeleteRevisionCycle(revision_cycle_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def update_revision_cycle(self, revision_cycle_repo: RevisionCyclePort) -> UpdateRevisionCycle:
+        return UpdateRevisionCycle(revision_cycle_repo)

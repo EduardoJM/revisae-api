@@ -3,7 +3,7 @@ from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 
 from presentation.exception_handlers import register_exception_handlers
-from presentation.routers import auth, users, subjects
+from presentation.routers import auth, users, subjects, revision_cycles
 from infrastructure.providers.providers import (
     DatabaseProvider,
     InfrastructureProvider,
@@ -36,6 +36,7 @@ def create_app() -> FastAPI:
     app.include_router(users.router, prefix=prefix)
     app.include_router(auth.router, prefix=prefix)
     app.include_router(subjects.router, prefix=prefix)
+    app.include_router(revision_cycles.router, prefix=prefix)
 
     return app
 
