@@ -9,3 +9,7 @@ migrate:
 .PHONY: dev
 dev:
 	uv run uvicorn --app-dir src main:app --reload
+
+.PHONY: consumer
+consumer:
+	uv run --directory src consumer.py

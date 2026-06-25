@@ -4,6 +4,8 @@ from dishka import Provider, Scope, provide
 from sqlalchemy.ext.asyncio import (
     AsyncEngine, AsyncSession, create_async_engine, async_sessionmaker
 )
+import pika
+from pika.adapters.blocking_connection import BlockingChannel
 
 from infrastructure.config.settings import settings, get_database_url
 
@@ -57,6 +59,17 @@ class DatabaseProvider(Provider):
             async with session.begin():
                 yield session   # commit on success, rollback on exception
 
+class RabbitMQProvider(Provider):
+    @provide(scope=Scope.APP)
+    def rabbitmq_connection(self) -> pika.BlockingConnection:
+        parameters = pika.URLParameters(settings.broker_url)
+        connection = pika.BlockingConnection(parameters)
+        # TODO: close connection?
+        return connection
+    
+    @provide(scope=Scope.APP)
+    def rabbitmq_channel(self, connection: pika.BlockingConnection) -> BlockingChannel:
+        return connection.channel()
 
 class InfrastructureProvider(Provider):
     @provide(scope=Scope.APP)
@@ -73,9 +86,9 @@ class InfrastructureProvider(Provider):
         return HasherService()
 
     @provide(scope=Scope.APP)
-    def publisher(self) -> EventPublisherPort:
-        return LogEventPublisher()
-    
+    def publisher(self, channel: BlockingChannel) -> EventPublisherPort:
+        return LogEventPublisher(channel)
+
     @provide(scope=Scope.REQUEST)
     def paginator(
         self,

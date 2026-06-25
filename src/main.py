@@ -9,6 +9,7 @@ from infrastructure.providers.providers import (
     InfrastructureProvider,
     RepositoryProvider,
     UseCaseProvider,
+    RabbitMQProvider,
 )
 
 
@@ -21,6 +22,7 @@ def create_app() -> FastAPI:
 
     # ── IoC container ─────────────────────────────────────────────────────────
     container = make_async_container(
+        RabbitMQProvider(),
         InfrastructureProvider(),
         DatabaseProvider(),
         RepositoryProvider(),
