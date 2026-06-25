@@ -39,6 +39,7 @@ class RevisionCycleRepository(RevisionCyclePort):
         return Page(
             results=[RevisionCycleMapper.to_entity(row) for row in data.results],
             total=data.total,
+            per_page=data.per_page,
         )
 
     async def delete(self, revision_cycle_id):

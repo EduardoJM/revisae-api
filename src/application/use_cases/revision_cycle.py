@@ -50,7 +50,8 @@ class ListRevisionCycles:
 
         return PaginatedRevisionCycleOutput(
             results=[_revision_cycle_to_output(cycle) for cycle in data.results],
-            total=data.total
+            total=data.total,
+            per_page=data.per_page,
         )
 
 class GetRevisionCycle:

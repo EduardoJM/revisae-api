@@ -26,5 +26,6 @@ class SubjectResponse(BaseModel):
 class PaginatedSubjectResponse(BaseModel):
     results: list[SubjectResponse]
     total: int
+    per_page: int
 
     model_config = ConfigDict(from_attributes=True)

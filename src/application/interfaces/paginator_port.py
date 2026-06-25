@@ -10,6 +10,7 @@ TEntity = TypeVar("TEntity")
 class Page[TEntity]:
     results: list[TEntity]
     total: int
+    per_page: int
 
 class PaginatorPort(ABC):
     @abstractmethod

@@ -26,5 +26,6 @@ class RevisionCycleOutput(BaseModel):
 class PaginatedRevisionCycleOutput(BaseModel):
     results: list[RevisionCycleOutput]
     total: int
+    per_page: int
 
     model_config = ConfigDict(from_attributes=True)

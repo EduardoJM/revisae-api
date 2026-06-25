@@ -50,7 +50,8 @@ class ListSubjects:
 
         return PaginatedSubjectOutput(
             results=[_subject_to_output(subject) for subject in data.results],
-            total=data.total
+            total=data.total,
+            per_page=data.per_page,
         )
 
 class GetSubject:

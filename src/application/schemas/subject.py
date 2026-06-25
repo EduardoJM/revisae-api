@@ -26,5 +26,6 @@ class SubjectOutput(BaseModel):
 class PaginatedSubjectOutput(BaseModel):
     results: list[SubjectOutput]
     total: int
+    per_page: int
 
     model_config = ConfigDict(from_attributes=True)

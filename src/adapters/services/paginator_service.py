@@ -20,4 +20,8 @@ class PaginatorService(PaginatorPort):
         results = await self._session.execute(items)
 
         count = await self._session.scalar(select(func.count()).select_from(query.froms[0]))
-        return Page(results=[entity for entity, *_ in results], total=count)
+        return Page(
+            results=[entity for entity, *_ in results],
+            total=count,
+            per_page=limit
+        )

@@ -39,6 +39,7 @@ class SubjectRepository(SubjectPort):
         return Page(
             results=[SubjectMapper.to_entity(row) for row in data.results],
             total=data.total,
+            per_page=data.per_page,
         )
     
     async def delete(self, subject_id):
