@@ -1,6 +1,8 @@
 import os
 import sys
 import json
+import asyncio
+import functools
 
 from dishka import make_async_container
 
@@ -16,6 +18,12 @@ from infrastructure.providers.providers import (
     RabbitMQProvider,
 )
 from application.consumers.base import ConsumersRegistry
+
+def sync(f):
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        return asyncio.get_event_loop().run_until_complete(f(*args, **kwargs))
+    return wrapper
 
 def main():
     container = make_async_container(
@@ -38,9 +46,10 @@ def main():
             arguments={'x-queue-type': 'classic'}
         )
 
-        def consume(ch, method, properties, body):
+        @sync
+        async def consume(ch, method, properties, body):
             body = json.loads(body)
-            ConsumersRegistry.execute_consumer(queue, body, container)
+            await ConsumersRegistry.execute_consumer(queue, body, container)
 
         channel.basic_consume(
             queue=f"domain_event.{queue}",

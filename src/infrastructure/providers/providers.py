@@ -150,8 +150,12 @@ class UseCaseProvider(Provider):
         return Logout(token_repo)
 
     @provide(scope=Scope.REQUEST)
-    def create_subject(self, subject_repo: SubjectPort) -> CreateSubject:
-        return CreateSubject(subject_repo)
+    def create_subject(
+        self,
+        subject_repo: SubjectPort,
+        publisher: EventPublisherPort,
+    ) -> CreateSubject:
+        return CreateSubject(subject_repo, publisher)
 
     @provide(scope=Scope.REQUEST)
     def list_subjects(self, subject_repo: SubjectPort) -> ListSubjects:

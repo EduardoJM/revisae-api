@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from .base import DomainEvent
 
 @dataclass(frozen=True)
-class UserRegistered(DomainEvent):
+class SubjectCreated(DomainEvent):
+    subject_id: UUID
     user_id: UUID
-    email: str
+    subject_name: str

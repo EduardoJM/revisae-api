@@ -32,10 +32,10 @@ class ConsumersRegistry:
         return [str(x) for x in cls._registry.keys()]
     
     @classmethod
-    def execute_consumer(cls, name, body, container: AsyncContainer):
+    async def execute_consumer(cls, name, body, container: AsyncContainer):
         ConsumerClass = cls.get(name)
         instance = ConsumerClass(container, body)
-        asyncio.run(instance.execute())
+        await instance.execute()
 
 def register_consumer(domain_event_cls: Type[DomainEvent]):
     def _wrapper(cls):

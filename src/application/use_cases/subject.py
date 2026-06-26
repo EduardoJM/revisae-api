@@ -1,5 +1,6 @@
 from uuid import UUID, uuid4
 
+from application.interfaces.event_publisher_port import EventPublisherPort
 from domain.entities.subject import Subject
 from domain.repositories.subject_port import SubjectPort
 from domain.exceptions.subject import SubjectNotFound
@@ -21,17 +22,22 @@ class CreateSubject:
     def __init__(
         self,
         subject_repo: SubjectPort,
+        publisher: EventPublisherPort,
     ) -> None:
         self._subjects = subject_repo
+        self._publisher = publisher
 
     async def execute(self, user_id: UUID, data: CreateSubjectInput) -> SubjectOutput:
-        subject = Subject(
+        subject = Subject.create(
             subject_id=uuid4(),
             user_id=user_id,
             name=data.name,
             color=data.color,
         )
         await self._subjects.save(subject)
+
+        for event in subject.collect_events():
+            await self._publisher.publish(event)
 
         return _subject_to_output(subject)
 

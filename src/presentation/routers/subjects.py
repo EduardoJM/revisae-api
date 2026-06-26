@@ -19,13 +19,13 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=PaginatedSubjectResponse, status_code=201, summary="Create a new subject")
+@router.post("/", response_model=SubjectResponse, status_code=201, summary="Create a new subject")
 @inject
 async def create_subject(
     body: CreateSubjectRequest,
     use_case: FromDishka[CreateSubject],
     user_id: UUID = Depends(get_current_user_id)
-) -> PaginatedSubjectResponse:
+) -> SubjectResponse:
     result = await use_case.execute(
         user_id,
         CreateSubjectInput(
@@ -33,6 +33,7 @@ async def create_subject(
             color=body.color,
         )
     )
+    print(result)
     return SubjectResponse.model_validate(result.model_dump())
 
 @router.get("/", response_model=PaginatedSubjectResponse, status_code=201, summary="List subjects")
@@ -43,7 +44,7 @@ async def list_subject(
     offset: int = 0,
     limit: int = 10,
     search: str = '',
-) -> SubjectResponse:
+) -> PaginatedSubjectResponse:
     result = await use_case.execute(user_id, offset, limit, search)
     return PaginatedSubjectResponse.model_validate(result.model_dump())
 
