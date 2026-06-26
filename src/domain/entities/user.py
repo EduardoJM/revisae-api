@@ -50,7 +50,7 @@ class User:
         full_name: str,
     ) -> "User":
         user = cls(user_id, email, hashed_password, full_name)
-        user._events.append(UserRegistered(user_id=user_id, email=str(email)))
+        user._events.append(UserRegistered(user_id=user_id, full_name=full_name, email=str(email)))
         return user
 
     def collect_events(self) -> list[DomainEvent]:

@@ -49,7 +49,7 @@ class Subject:
         color: HexColor
     ):
         subject = cls(subject_id, user_id, name, color)
-        subject._events.append(SubjectCreated(subject_id=subject_id, user_id=user_id, subject_name=subject_id))
+        subject._events.append(SubjectCreated(subject_id=subject_id, user_id=user_id, subject_name=name))
         return subject
 
     def update(

@@ -7,3 +7,4 @@ from .base import DomainEvent
 class UserRegistered(DomainEvent):
     user_id: UUID
     email: str
+    full_name: str
