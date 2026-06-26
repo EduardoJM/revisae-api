@@ -27,7 +27,7 @@ class LogEventPublisher(EventPublisherPort):
         )
         self._channel.basic_publish(
             exchange='',
-            routing_key='domain_event',
+            routing_key=f"domain_event.{type(event).__name__}",
             body=json.dumps({
                 "event_type": type(event).__name__,
                 "occurred_at": event.occurred_at.isoformat(),

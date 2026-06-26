@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 from dishka import make_async_container
 
@@ -14,12 +15,7 @@ from infrastructure.providers.providers import (
     UseCaseProvider,
     RabbitMQProvider,
 )
-
-def callback(ch, method, properties, body):
-    print(ch)
-    print(method)
-    print(properties)
-    print(f" [x] Received {body}")
+from application.consumers.base import ConsumersRegistry
 
 def main():
     container = make_async_container(
@@ -34,16 +30,23 @@ def main():
     connection = pika.BlockingConnection(parameters)
     channel =  connection.channel()
 
-    channel.queue_declare(
-        queue="domain_event",
-        durable=True,
-        arguments={'x-queue-type': 'classic'}
-    )
-    channel.basic_consume(
-        queue='domain_event',
-        auto_ack=True,
-        on_message_callback=callback
-    )
+    queues = ConsumersRegistry.get_all_consumers()
+    for queue in queues:
+        channel.queue_declare(
+            queue=f"domain_event.{queue}",
+            durable=True,
+            arguments={'x-queue-type': 'classic'}
+        )
+
+        def consume(ch, method, properties, body):
+            body = json.loads(body)
+            ConsumersRegistry.execute_consumer(queue, body, container)
+
+        channel.basic_consume(
+            queue=f"domain_event.{queue}",
+            auto_ack=True,
+            on_message_callback=consume
+        )
 
     channel.start_consuming()
 
