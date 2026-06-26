@@ -1,6 +1,10 @@
 # Revisaê-API
 
-Arquitetura de pastas da aqplicação:
+Revisaê é um aplicativo para gerenciar conteúdos estudados que precisam ser revisados. Esse repositório compreende a API a ser utilizada pelo aplicativo. A ideia inicial foi tentar seguir uma estrutura baseada em Clean Architecture.
+
+## Arquitetura
+
+A arquitetura, resumida, de pastas da aplicação segue o seguinte modelo:
 
 ```
 revisae-api
@@ -15,6 +19,7 @@ revisae-api
 |   ├── application/
 |   |   ├── interfaces/                 # interfaces comuns e de serviço
 |   |   ├── schemas/                    # schemas usados nos use-cases
+|   |   ├── consumers/                  # consumers para lidar com os eventos de domínio
 |   |   └── use_cases/                  # use-cases com regras de negócio
 |   |
 |   ├── infraestructure/
