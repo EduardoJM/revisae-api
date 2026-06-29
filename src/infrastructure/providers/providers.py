@@ -18,6 +18,7 @@ from domain.repositories.user_port import UserPort
 from domain.repositories.refresh_token_port import RefreshTokenPort
 from domain.repositories.subject_port import SubjectPort
 from domain.repositories.revision_cycle_port import RevisionCyclePort
+from domain.repositories.notification_port import NotificationPort
 
 from adapters.services.event_publisher_service import LogEventPublisher
 from adapters.services.hasher_service import HasherService
@@ -27,11 +28,15 @@ from adapters.repositories.user_repository import UserRepository
 from adapters.repositories.refresh_token_repository import RefreshTokenRepository
 from adapters.repositories.subject_repository import SubjectRepository
 from adapters.repositories.revision_cycle_repository import RevisionCycleRepository
+from adapters.repositories.notification_repository import NotificationRepository
 
 from application.use_cases.user import RegisterUser, AuthenticatedUser
 from application.use_cases.auth import Login, RefreshTokens, Logout
 from application.use_cases.subject import (
     CreateSubject, ListSubjects, GetSubject, UpdateSubject, DeleteSubject
+)
+from application.use_cases.notification import (
+    ListNotifications, GetNotification, MarkNotificationAsReaded
 )
 from application.use_cases.revision_cycle import (
     CreateRevisionCycle, ListRevisionCycles, GetRevisionCycle,
@@ -112,6 +117,10 @@ class RepositoryProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def revision_cycle_port(self, session: AsyncSession, paginator: PaginatorPort) -> RevisionCyclePort:
         return RevisionCycleRepository(session, paginator)
+    
+    @provide(scope=Scope.REQUEST)
+    def notification_port(self, session: AsyncSession, paginator: PaginatorPort) -> NotificationPort:
+        return NotificationRepository(session, paginator)
 
 class UseCaseProvider(Provider):
     @provide(scope=Scope.REQUEST)
@@ -192,3 +201,15 @@ class UseCaseProvider(Provider):
     @provide(scope=Scope.REQUEST)
     def update_revision_cycle(self, revision_cycle_repo: RevisionCyclePort) -> UpdateRevisionCycle:
         return UpdateRevisionCycle(revision_cycle_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def list_notifications(self, notification_repo: NotificationPort) -> ListNotifications:
+        return ListNotifications(notification_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def get_notification(self, notification_repo: NotificationPort) -> GetNotification:
+        return GetNotification(notification_repo)
+
+    @provide(scope=Scope.REQUEST)
+    def mark_notification_as_readed(self, notification_repo: NotificationPort) -> MarkNotificationAsReaded:
+        return MarkNotificationAsReaded(notification_repo)

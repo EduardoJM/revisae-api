@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from .refresh_token import RefreshTokenModel
     from .subjects import SubjectModel
     from .revision_cycle import RevisionCycleModel
+    from .notification import NotificationModel
 
 
 class UserModel(BaseModel):
@@ -28,6 +29,9 @@ class UserModel(BaseModel):
     subjects: Mapped[list["SubjectModel"]] = relationship(
         "SubjectModel", back_populates="user", cascade="all, delete-orphan"
     )
-    revision_cycles: Mapped[list["SubjectModel"]] = relationship(
+    revision_cycles: Mapped[list["RevisionCycleModel"]] = relationship(
         "RevisionCycleModel", back_populates="user", cascade="all, delete-orphan"
+    )
+    notifications: Mapped[list["NotificationModel"]] = relationship(
+        "NotificationModel", back_populates="user", cascade="all, delete-orphan"
     )

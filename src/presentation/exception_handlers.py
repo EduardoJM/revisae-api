@@ -7,6 +7,7 @@ from domain.exceptions.auth import (
 )
 from domain.exceptions.user import EmailAlreadyTaken, UserNotFound
 from domain.exceptions.subject import SubjectNotFound
+from domain.exceptions.notification import NotificationNotFound
 
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(EmailAlreadyTaken)
@@ -23,6 +24,10 @@ def register_exception_handlers(app: FastAPI) -> None:
 
     @app.exception_handler(SubjectNotFound)
     async def subject_not_found(_: Request, exc: SubjectNotFound) -> JSONResponse:
+        return JSONResponse(status_code=404, content={"detail": str(exc)})
+
+    @app.exception_handler(NotificationNotFound)
+    async def notification_not_found(_: Request, exc: NotificationNotFound) -> JSONResponse:
         return JSONResponse(status_code=404, content={"detail": str(exc)})
 
     @app.exception_handler(InvalidToken)
