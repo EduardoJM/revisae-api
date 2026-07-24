@@ -28,7 +28,7 @@ jobs:
         run: uv sync --locked --all-extras --dev
 
       - name: Run tests
-        run: uv run coverage -m pytest
+        run: uv run coverage run -m pytest
 
       - name: Coveralls
         uses: coverallsapp/github-action@v2
