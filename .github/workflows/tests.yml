@@ -30,5 +30,10 @@ jobs:
       - name: Run tests
         run: uv run coverage run -m pytest
 
+      - name: Create Report
+        run: uv run coverage lcov
+
       - name: Coveralls
         uses: coverallsapp/github-action@v2
+        with:
+          format: lcov
