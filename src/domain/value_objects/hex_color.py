@@ -2,7 +2,7 @@ import re
 from dataclasses import dataclass
 
 
-_COLOR_RE = re.compile(r'#?[0-9abcdef]{8}|#?[0-9abcdef]{6}|#?[0-9abcdef]{4}|#?[0-9abcdef]{3}')
+_COLOR_RE = re.compile(r'^(#?[0-9abcdef]{8}|#?[0-9abcdef]{6}|#?[0-9abcdef]{4}|#?[0-9abcdef]{3})$')
 
 @dataclass(frozen=True)
 class HexColor:
