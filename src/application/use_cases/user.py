@@ -54,5 +54,5 @@ class AuthenticatedUser:
     async def execute(self, user_id: UUID) -> UserOutput:
         user = await self._users.find_by_id(user_id)
         if not user:
-            raise UserNotFound()
+            raise UserNotFound(user_id)
         return _user_to_output(user)
